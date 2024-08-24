@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +45,54 @@ INSTALLED_APPS = [
     'ckeditor_uploader',
     'rest_framework',
 ]
+
+JAZZMIN_SETTINGS = {
+    'site_title': 'E-Commerce Admin',
+    'site_header': 'E-Commerce',
+    "site_brand": "E-Commerce",
+    'welcome_sign': 'Welcome to the Ecommerce Administration Site',
+    'show_ui_builder': True,
+    'topmenu_links': [
+            {'name': 'Home', 'url': 'admin:index', 'permissions': ['auth.view_user']},
+            {"name": "Thống Kê", "url": "http://127.0.0.1:8000/admin/ecommerce-stats/", "permissions": ["auth.view_user"]},
+            {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+            {'model': 'auth.User'},
+            {'app': 'ecommerce'},
+    ],
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": False,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": False,
+    "accent": "accent-primary",
+    "navbar": "navbar-orange navbar-light",
+    "no_navbar_border": True,
+    "navbar_fixed": False,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": False,
+    "sidebar": "sidebar-dark-orange",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_flat_style": False,
+    "theme": "default",
+    "dark_mode_theme": None,
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    },
+    "actions_sticky_top": False
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,7 +133,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecommercejsdb',
         'USER': 'root',
-        'PASSWORD': 'Admin@123',
+        'PASSWORD': '1234',
         'HOST': ''
     }
 }

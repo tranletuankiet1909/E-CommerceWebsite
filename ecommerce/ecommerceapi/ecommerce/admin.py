@@ -5,6 +5,8 @@ from ecommerce.models import User, Product, Category, Order, OrderDetail, Store,
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 import datetime
+from django.template.response import TemplateResponse
+from ecommerce import dao
 
 # Register your models here.
 class DetailInline(admin.TabularInline):
@@ -78,14 +80,54 @@ class MyOrderAdmin(admin.ModelAdmin):
 class MyOrderDetailAdmin(admin.ModelAdmin):
     list_display = ['id', 'order', 'product', 'price', 'quantity']
 
-admin.site.register(User, MyUserAdmin)
-admin.site.register(Category, MyCategoryAdmin)
-admin.site.register(Tag, MyTagAdmin)
-admin.site.register(Store, MyStoreAdmin)
-admin.site.register(Comment, MyCommentAdmin)
-admin.site.register(Rating, MyRatingAdmin)
-admin.site.register(Product, MyProductAdmin)
-admin.site.register(Order, MyOrderAdmin)
-admin.site.register(OrderDetail, MyOrderDetailAdmin)
-admin.site.register(Cart)
-admin.site.register(CartItem)
+class CommerceAdminSite(admin.AdminSite):
+    def get_urls(self):
+        return [path('ecommerce-stats/', self.stats_view)] + super().get_urls()
+
+    def stats_view(self, request):
+        start_date_str = request.GET.get('start_date')
+        end_date_str = request.GET.get('end_date')
+
+        if start_date_str and end_date_str:
+            start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
+            end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d')
+        else:
+            today = datetime.datetime.today()
+            start_date = today - datetime.timedelta(days=30)
+            end_date = today
+
+        top_10_stores_by_success_orders = dao.top_10_stores_by_success_orders(start_date, end_date)
+        total_revenue_by_day = dao.total_revenue_by_day(start_date, end_date)
+        total_buyer = dao.total_buyer()
+        total_store = dao.total_store()
+        total_order_pending = dao.total_order_pending()
+        total_product = dao.total_product()
+        total_revenue = dao.total_revenue()
+        count_products_by_category = dao.count_products_by_category()
+
+        return TemplateResponse(request, 'admin/stats.html',{
+            "total_buyer": total_buyer,
+            "total_store": total_store,
+            "total_order_pending": total_order_pending,
+            "total_product": total_product,
+            "top_10_stores_by_success_orders": top_10_stores_by_success_orders,
+            "total_revenue_by_day": total_revenue_by_day,
+            "count_products_by_category": count_products_by_category,
+            "total_revenue": total_revenue,
+            'start_date': start_date_str,
+            'end_date': end_date_str,
+        })
+
+admin_site = CommerceAdminSite(name='ecommerce')
+
+admin_site.register(User, MyUserAdmin)
+admin_site.register(Category, MyCategoryAdmin)
+admin_site.register(Tag, MyTagAdmin)
+admin_site.register(Store, MyStoreAdmin)
+admin_site.register(Comment, MyCommentAdmin)
+admin_site.register(Rating, MyRatingAdmin)
+admin_site.register(Product, MyProductAdmin)
+admin_site.register(Order, MyOrderAdmin)
+admin_site.register(OrderDetail, MyOrderDetailAdmin)
+admin_site.register(Cart)
+admin_site.register(CartItem)
