@@ -40,10 +40,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'ecommerce',
     'ckeditor',
     'ckeditor_uploader',
     'rest_framework',
+    'oauth2_provider',
 ]
 
 JAZZMIN_SETTINGS = {
@@ -133,7 +135,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'ecommercejsdb',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': 'Admin@123',
         'HOST': ''
     }
 }
@@ -178,6 +180,9 @@ CKEDITOR_UPLOAD_PATH = 'ckeditors/images/ecommerce'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('oauth2_provider.contrib.rest_framework.OAuth2Authentication',)
+}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import cloudinary
@@ -189,3 +194,14 @@ cloudinary.config(
     secure=True
 )
 AUTH_USER_MODEL = "ecommerce.User"
+
+
+CLIENT_ID = 'Bi4o6HQlE12pj6TYwdRqCDBaBarMBmXEgeXLNmnv'
+CLIENT_SECRET = '1dpuEE2jEmjtViT2UKmgvaq0p3BPkvlZluYeArCCAtEwBYjgAEdQUK9HHtqwGZYe5GxBJLdzuY5CCOjYqP0B4ZK3hNCBS1d5hLZOIWZVDpzDQvGU46C9vPcV7C4Un0Q6'
+
+
+# CLIENT_ID = 'gMRW6R42biARsbk14H2pA5IYsP5ccDbqKCAUXToZ'
+# CLIENT_SECRET = 'dhRcO4oKXcepxnlER3kIluxa7hz6dGIz4OcQN1ZZh0tJt18kaZ7XETEsGiaPJ7gy5c0P7hMqUQcWVmY5jKjutNLX7v7235Izm88wG3PLUggFukKmDpvRp8AAEmiTkjqf'
+#
+#
+# OAUTH2_PROVIDER = { 'OAUTH2_BACKEND_CLASS': 'oauth2_provider.oauth2_backends.JSONOAuthLibCore' }
