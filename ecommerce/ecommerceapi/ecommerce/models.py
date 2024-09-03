@@ -5,6 +5,7 @@ from ckeditor.fields import RichTextField
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.exceptions import ValidationError
 
 class BaseModel(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, null=True)
@@ -59,7 +60,7 @@ class Product(BaseModel):
     name = models.CharField(max_length=100)
     description = RichTextField(blank=True, null=True)
     inventory_quantity = models.PositiveIntegerField(default=0)
-    price = models.DecimalField(max_digits=10, decimal_places=3)
+    price = models.DecimalField(max_digits=13, decimal_places=3)
     image = CloudinaryField(null=True, folder="product_img/")
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products_cate')
     store = models.ForeignKey(Store, on_delete=models.CASCADE, related_name='products_store', null=True)
@@ -72,7 +73,7 @@ class Order(BaseModel):
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='order_buyer')
     store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True, related_name='order_store')
     status = models.CharField(max_length=100, choices=STATUS_ORDER_CHOICES, default=STATUS_ORDER_CHOICES[0][0])
-    total_price = models.DecimalField(max_digits=10, decimal_places=3, default=0)
+    total_price = models.DecimalField(max_digits=13, decimal_places=3, default=0)
 
     def __str__(self):
         return f"Order #{self.id} from {self.store.name}: total {self.total_price}"
@@ -90,7 +91,7 @@ class OrderDetail(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='order_product')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='details')
     quantity = models.PositiveIntegerField(default=1)
-    price = models.DecimalField(max_digits=10, decimal_places=3, null=True, blank=True) #don gia * so luong
+    price = models.DecimalField(max_digits=13, decimal_places=3, null=True, blank=True) #don gia * so luong
 
     def save(self, *args, **kwargs):
         if self.price is None:
@@ -136,6 +137,10 @@ class Rating(Interaction):
 
     def __str__(self):
         return f"{self.product.name} - {self.buyer.first_name} - {self.rating}"
+
+    def clean(self):
+        if int(self.rating) < 1 or int(self.rating) > 5:
+            raise ValidationError("Rating must be between 1 and 5.")
 
     class Meta:
         unique_together = ('buyer', 'product')

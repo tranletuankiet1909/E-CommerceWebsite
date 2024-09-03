@@ -58,17 +58,17 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveUp
         else:
             parent = None
 
-        c = self.get_object().comment_set.create(content=request.data.get('content'), parent=parent)
-        return Response(serializers.CategorySerializer(c).data, status=status.HTTP_201_CREATED)
+        c = self.get_object().comment_set.create(content=request.data.get('content'), parent=parent, buyer=request.user)
+        return Response(serializers.CommentSerializer(c).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['post'], url_path='add-rating', detail=True)
     def add_rating(self, request, pk):
-        c = self.get_object().productrating_set.create(rating=request.data.get('rating'), buyer=request.user)
+        c = self.get_object().rating_set.create(rating=request.data.get('rating'), buyer=request.user)
         return Response(serializers.RatingSerializer(c).data, status=status.HTTP_201_CREATED)
 
     @action(methods=['get'], url_path='comments', detail=True)
     def get_comments(self, request, pk):
-        comments = self.get_object().productcomment_set.select_related('buyer').order_by('-id')
+        comments = self.get_object().comment_set.select_related('buyer').order_by('-id')
         paginator = paginators.ReviewPaginator()
 
         page = paginator.paginate_queryset(comments, request)
@@ -80,7 +80,7 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveUp
 
     @action(methods=['get'], url_path='ratings', detail=True)
     def get_ratings(self, request, pk):
-        ratings = self.get_object().productrating_set.select_related('buyer').order_by('-id')
+        ratings = self.get_object().rating_set.select_related('buyer').order_by('-id')
         paginator = paginators.ReviewPaginator()
 
         page = paginator.paginate_queryset(ratings, request)
@@ -89,13 +89,6 @@ class ProductViewSet(viewsets.ViewSet, generics.ListAPIView, generics.RetrieveUp
             return paginator.get_paginated_response(serializer.data)
 
         return Response(serializers.RatingSerializer(ratings, many=True).data)
-
-
-    @action(methods=['post'], url_path='add-rating', detail=True)
-    def add_rating(self, request, pk):
-        c = self.get_object().rating_set.create(rating=request.data.get('rating'), buyer=request.user)
-        return Response(serializers.RatingSerializer(c).data, status=status.HTTP_201_CREATED)
-
 
 class StoreViewSet(viewsets.ViewSet, generics.ListAPIView, generics.CreateAPIView):
     queryset = Store.objects.all()

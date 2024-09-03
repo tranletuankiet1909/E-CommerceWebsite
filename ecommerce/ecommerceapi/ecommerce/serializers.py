@@ -93,6 +93,7 @@ class OrderDetailSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     items = OrderDetailSerializer(many=True, read_only=True)
+    buyer = UserSerializer()
 
     class Meta:
         model = Order
