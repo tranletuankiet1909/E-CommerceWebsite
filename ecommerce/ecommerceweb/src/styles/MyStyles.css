@@ -1,0 +1,159 @@
+.home-container {
+    padding: 20px;
+
+}
+
+.search-bar {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 10px;
+    margin-right: 10px;
+}
+
+.search-bar button {
+    padding: 10px;
+}
+
+.category-chips {
+    display: flex;
+    flex-wrap: wrap; /* Đảm bảo các nút category hiển thị trên nhiều dòng nếu cần */
+    margin-bottom: 20px;
+}
+
+.category-chips .chip {
+    margin-right: 10px;
+    margin-bottom: 10px; /* Thêm margin-bottom để tạo khoảng cách giữa các hàng */
+    padding: 10px;
+    border: 1px solid #ddd;
+    cursor: pointer;
+}
+
+.category-chips .chip.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.products-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Thêm khoảng cách giữa các sản phẩm */
+}
+
+.item {
+    width: calc(25% - 20px); /* Giảm độ rộng để tạo khoảng cách giữa các phần tử */
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.item img {
+    max-width: 100%;
+}
+
+.loading {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.load-more {
+    display: block;
+    margin: 20px auto;
+    padding: 10px;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.error {
+    color: red;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.register-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  h2 {
+    text-align: center;
+    color: #041E42;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+
+  h3 {
+    text-align: center;
+    color: #041E42;
+    font-weight: bold;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .form-group input,
+  .react-select-container {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 14px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 10px;
+    background-color: #041E42;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .btn-submit:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
