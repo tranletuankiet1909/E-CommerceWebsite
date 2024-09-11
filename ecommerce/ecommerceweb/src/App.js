@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 //import './App.css';
 import Register from './pages/Register';
 import Login from './pages/Login';
+import Profile from './pages/Profile';
 import { ContextProvider } from './configs/Contexts';
 import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
@@ -21,6 +22,7 @@ function App() {
           <Routes>
             <Route path="/register/" element={<Register />} />
             <Route path="/login/" element={<Login />} />
+            <Route path="/profile/" element={<Profile />} />
           </Routes>
         </Router>
 
