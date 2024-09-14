@@ -36,9 +36,13 @@ const Login = () => {
             let res = await axios.post(`/o/token/`, {
                 username: username,
                 password: password,
-                client_id: 'd4fuXBp7ENwx9fmtsmBWY4XtAec9bRYlBCpAGcUm',
-                client_secret: 'swdOLBjyqXcXnQCheHqIxvoNR2ENtUgSWdMetrO9l5JBW182FaqCQKAl6K5wQwunFmTsaQfQF2dpEwC39gKxONM85GqxbT19vkaTug369JfU1E5lkYiYr4kI58gmoQ8r',
+                client_id: 'lEnIa3wMV85V09cKCHoYkAmR2gzQYuPtAcykH51x',
+                client_secret: 'Fz00b53Cmk5A5yla0QkVbuudoAbpBoubmxlaUPTYeVfCPQJt8tg3uNfKfpbiUTm5bnNG66ylbiyEMWvRcx9tMi8lZSrn51QbCyV8mu64n8hs3rNhuSNwfbVmiY9YLHHR',
                 grant_type: 'password',
+            },{
+                headers: {
+        '           Content-Type': 'multipart/form-data',
+                }
             });
 
             localStorage.setItem('access-token', res.data.access_token);
@@ -63,10 +67,6 @@ const Login = () => {
 
 
             }, 100);
-            // setSuccess('Đăng nhập thành công!');
-            // setTimeout(() => {
-            //     navigate('/');
-            // }, 2000); // Đợi 2 giây rồi chuyển hướng
         } catch (ex) {
             console.log(ex);
             setError('Tên đăng nhập hoặc mật khẩu không đúng.');
