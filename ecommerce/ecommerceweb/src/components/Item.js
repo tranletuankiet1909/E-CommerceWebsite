@@ -1,6 +1,5 @@
 import React from 'react';
 import '../styles/MyStyles.css';
-//import { unstable_HistoryRouter } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const Item = ({ instance }) => {
