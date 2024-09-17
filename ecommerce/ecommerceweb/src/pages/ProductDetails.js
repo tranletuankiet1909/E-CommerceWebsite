@@ -2,11 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
-import { Container, CardContent, CardMedia, Typography, Chip, Button, CircularProgress, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, Rating, List, ListItem, ListItemText, AppBar, Toolbar, IconButton, Avatar, Menu, MenuItem, Drawer, Grid } from '@mui/material';
+import { Container, TextField, CardContent, CardMedia, Typography, Button, Box, AppBar, Toolbar, IconButton, Avatar, Menu, MenuItem, Drawer, List, ListItem, ListItemText, Divider, Rating, Card } from '@mui/material';
 import Contexts from '../configs/Contexts';
-import StarIcon from '@mui/icons-material/Star';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Row, Col, Card } from 'antd';
 
 const ProductDetails = () => {
     const { id } = useParams();
@@ -45,8 +43,13 @@ const ProductDetails = () => {
 
     const loadRatings = async () => {
         try {
+            // Gọi API và nhận phản hồi
             let res = await axios.get(`/products/${id}/ratings`);
+
+            // Trích xuất dữ liệu từ phản hồi
             let data = res.data;
+
+            // Kiểm tra xem results có phải là mảng không
             let ratingsArray = Array.isArray(data.results) ? data.results : [data.results];
             setRatings(ratingsArray);
         } catch (ex) {
@@ -116,8 +119,8 @@ const ProductDetails = () => {
     const handleDeleteComment = async (commentId) => {
         try {
             const res = await axios.delete(
-                `/productcomments/${commentId}/`,
-                { headers: { Authorization: `Bearer ${token}` } } 
+                `/comments/${commentId}/`,
+                { headers: { Authorization: `Bearer ${token}` } } // Include the token in the headers
             );
             if (res.status === 204) {
                 loadComments();
@@ -144,7 +147,7 @@ const ProductDetails = () => {
     const handleDeleteRating = async (ratingId) => {
         try {
             const res = await axios.delete(
-                `/productratings/${ratingId}/`,
+                `/ratings/${ratingId}/`,
                 { headers: { Authorization: `Bearer ${token}` } } // Include the token in the headers
             );
             if (res.status === 204) {
@@ -236,6 +239,12 @@ const ProductDetails = () => {
             onKeyDown={toggleDrawer(false)}
         >
             <List>
+                {/* {['Giỏ hàng', 'Đơn hàng'].map((text, index) => (
+                    <ListItem button key={text} onClick={() => navigate(`/${text.toLowerCase().replace(' ', '-')}`)}>
+                        <ListItemText primary={text} />
+                    </ListItem>
+                ))} */}
+
                 <ListItem button onClick={() => navigate('/carts/')}>
                     <ListItemText primary="Giỏ hàng" />
                 </ListItem>
@@ -258,47 +267,31 @@ const ProductDetails = () => {
         navigate('/profile/');
     };
 
+    if (loading || !product) return <div>Đang tải...</div>;
+
     return (
         <div>
             <AppBar style={{ marginBottom: 5 }} position="static">
                 <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        sx={{ mr: 2 }}
-                        onClick={toggleDrawer(true)}
-                        disabled={!user}
-                    >
+                    <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={toggleDrawer(true)}>
                         <MenuIcon style={{ color: "white" }} />
                     </IconButton>
                     <Box sx={{ flexGrow: 1 }}>
                         <Button onClick={() => navigate('/')} color="inherit">
-                            <Typography variant="h6" component="div">
-                                ECOMMERCE
-                            </Typography>
+                            <Typography variant="h6" component="div">ECOMMERCE</Typography>
                         </Button>
                     </Box>
                     {!user ? (
                         <>
-                            <Button variant="contained" color="primary" onClick={handleLogin} style={{ marginLeft: 10, border: "1px solid white" }}>
-                                Đăng nhập
-                            </Button>
-                            <Button variant="contained" color="secondary" onClick={handleRegister} style={{ marginLeft: 10, border: "1px solid white" }}>
-                                Đăng ký
-                            </Button>
+                            <Button variant="contained" color="primary" onClick={() => navigate('/login/')} style={{ marginLeft: 10, border: "1px solid white" }}>Đăng nhập</Button>
+                            <Button variant="contained" color="secondary" onClick={() => navigate('/register/')} style={{ marginLeft: 10, border: "1px solid white" }}>Đăng ký</Button>
                         </>
                     ) : (
                         <>
                             <IconButton onClick={handleMenuOpen}>
                                 <Avatar alt={user.username} src={user.avatar} style={{ border: "1px solid white" }} />
                             </IconButton>
-                            <Menu
-                                anchorEl={anchorEl}
-                                open={Boolean(anchorEl)}
-                                onClose={handleMenuClose}
-                            >
+                            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                                 <MenuItem onClick={handleProfile}>Profile</MenuItem>
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
@@ -306,49 +299,22 @@ const ProductDetails = () => {
                     )}
                 </Toolbar>
             </AppBar>
-            <Drawer
-                anchor='left'
-                open={drawerOpen}
-                onClose={toggleDrawer(false)}
-            >
+
+            <Drawer anchor='left' open={drawerOpen} onClose={toggleDrawer(false)}>
                 {list()}
             </Drawer>
-            <Container>
-                <Card>
-                    <Row gutter={[16, 16]}>
-                        <Col span={8}>
-                        <img
-                            src="https://via.placeholder.com/150"
-                            alt="Khẩu trang"
-                            style={{ width: '100%' }}
-                        />
-                        </Col>
-                        <Col span={16}>
-                        <h2>Khẩu Trang 5D 3 Lớp Chống Nắng Chống Bụi Chống Tia UV</h2>
-                        <p>10,2k đánh giá</p>
-                        <h3 style={{ color: 'red' }}>50.000đ</h3>
-                        <p>Số lượng tồn: 10</p>
-                        <Button type="primary" style={{ marginTop: '10px' }}>Thêm vào giỏ hàng</Button>
-                        </Col>
-                    </Row>
-                </Card>
-                <Card>
-                    <CardMedia component="img" style={{ height: 400, width: "50%" }} image={product.image} />
-                    <CardContent>
-                        <Typography variant="h5">{product.name}</Typography>
-                        <Typography variant="h6" color="secondary">{product.price}đ</Typography>
-                        <Typography variant="body1" dangerouslySetInnerHTML={{ __html: product.description }}></Typography>
-                        <Typography variant="body2">Số lượng tồn: {product.inventory_quantity}</Typography>
-                        <div>
-                            {product.tags.map(tag => (
-                                <Chip key={tag.id} label={tag.name} />
-                            ))}
-                        </div>
-                        {user ? <>
-                            <Button variant="contained" color="primary" onClick={handleAddToCart}>Thêm vào giỏ hàng</Button>
-                            {cartMessage && <Typography variant="body2" color="success">{cartMessage}</Typography>}</> : <></>}
 
-                    </CardContent>
+            <Container>
+                <Card sx={{ display: 'flex', padding: 2, marginBottom: 3 }}>
+                    <CardMedia component="img" style={{ width: 150, height: 150, marginRight: 20 }} image={product.image} />
+                    <Box>
+                        <Typography variant="h5">{product.name}</Typography>
+                        <Typography variant="body2" color="textSecondary">10.2k đánh giá</Typography>
+                        <Typography variant="h6" color="error" sx={{ margin: '10px 0' }}>{product.price}đ</Typography>
+                        <Typography variant="body2">Số lượng tồn: {product.inventory_quantity}</Typography>
+                        <Button variant="contained" color="primary" onClick={handleAddToCart} sx={{ marginTop: 2 }}>Thêm vào giỏ hàng</Button>
+                        {cartMessage && <Typography variant="body2" color="success" sx={{ marginTop: 1 }}>{cartMessage}</Typography>}
+                    </Box>
                 </Card>
 
                 {product.store && (
@@ -363,54 +329,53 @@ const ProductDetails = () => {
                     </Card>
                 )}
 
-                <Card>
-                    <CardContent>
+                <Card sx={{ padding: 2, marginBottom: 3 }}>
+                    <Typography variant="h6" sx={{ textAlign: "center", color:"red", marginBottom: 2 }}><b>MÔ TẢ SẢN PHẨM</b></Typography>
+                    <Typography variant="body2" dangerouslySetInnerHTML={{ __html: product.description }}></Typography>
+                </Card>
+
+                <Card sx={{ padding: 2 }}>
+                    <Typography variant="h6" sx={{ textAlign: "center", color:"red", marginBottom: 2 }}><b>ĐÁNH GIÁ SẢN PHẨM</b></Typography>
+                    <Box display="flex" justifyContent="flex-start" gap={2}>
                         <Button variant={showComments ? "contained" : "outlined"} onClick={() => { setShowComments(true); setShowRatings(false); }}>Xem bình luận</Button>
                         <Button variant={showRatings ? "contained" : "outlined"} onClick={() => { setShowComments(false); setShowRatings(true); }}>Xem đánh giá</Button>
-
-                        {showComments && (
-                            <>
-                                <Typography variant="h6">Phản hồi người dùng</Typography>
-                                {user ? (
-                                    <Box display="flex" alignItems="center">
-                                        <TextField
-                                            label="Nội dung bình luận"
-                                            fullWidth
-                                            value={newComment}
-                                            onChange={(e) => setNewComment(e.target.value)}
-                                        />
-                                        <Button onClick={handleAddComment}>Bình luận</Button>
-                                    </Box>
-                                ) : null}
-
-                                <div>
-                                    {renderComments(comments)}
-                                </div>
-                            </>
-                        )}
-
-                        {showRatings && (
-                            <>
-                                <Typography variant="h6">Đánh giá người dùng</Typography>
-                                {user ? (
-                                    <Box display="flex" alignItems="center" mb={2}>
-                                        <Rating
-                                            value={newRating}
-                                            onChange={(event, newValue) => setNewRating(newValue)}
-                                            precision={1}
-                                            emptyIcon={<StarIcon fontSize="inherit" />}
-                                        />
-                                        <Button onClick={handleAddRating}>Đánh giá</Button>
-                                    </Box>
-                                ) : null}
-                                <div>
-                                    {renderRatings(ratings)}
-                                </div>
-                            </>
-                        )}
-                    </CardContent>
+                    </Box>
+                    <Divider sx={{ my: 2 }} />
+                    {showComments && (
+                        <>
+                            <Typography variant="h6">Phản hồi người dùng</Typography>
+                            {user && (
+                                <Box display="flex" alignItems="center">
+                                    <TextField
+                                        label="Nội dung bình luận"
+                                        fullWidth
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                    />
+                                    <Button onClick={handleAddComment}>Bình luận</Button>
+                                </Box>
+                            )}
+                            <div>{renderComments(comments)}</div>
+                        </>
+                    )}
+                    {showRatings && (
+                        <>
+                            <Typography variant="h6">Đánh giá người dùng</Typography>
+                            {user && (
+                                <Box display="flex" alignItems="center" mb={2}>
+                                    <Rating
+                                        value={newRating}
+                                        onChange={(event, newValue) => setNewRating(newValue)}
+                                        precision={1}
+                                    />
+                                    <Button onClick={handleAddRating}>Đánh giá</Button>
+                                </Box>
+                            )}
+                            <div>{renderRatings(ratings)}</div>
+                        </>
+                    )}
                 </Card>
-            </Container >
+            </Container>
         </div>
     );
 };

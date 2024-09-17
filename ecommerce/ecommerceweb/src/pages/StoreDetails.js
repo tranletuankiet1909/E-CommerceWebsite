@@ -186,7 +186,7 @@ const StoreDetails = () => {
                     </Box>
                 </Card>
 
-                <Typography variant="h6" style={{ marginTop: '30px', textAlign: 'center', fontWeight: 'bold' }}>SẢN PHẨM CỦA CỬA HÀNG</Typography>
+                <Typography variant="h6" style={{ marginTop: '30px', marginBottom: '30px', textAlign: 'center', fontWeight: 'bold', color: 'red' }}><b>SẢN PHẨM CỦA CỬA HÀNG</b></Typography>
 
                 <div className="products-grid">
                     {products.map((item) => (
