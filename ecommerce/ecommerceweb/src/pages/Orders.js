@@ -205,7 +205,7 @@ const Orders = () => {
         </div>
 
             {/* Main content */}
-            <Box sx={{ display: 'flex', height: '100vh', padding: '0 24px' }}> {/* Sử dụng padding cho Box */}
+            <Box sx={{ display: 'flex', height: '100vh', padding: '0 24px' }}>
             <Box
               sx={{
                 width: 250,
@@ -213,9 +213,6 @@ const Orders = () => {
                 p: 2,
               }}
             >
-              <Typography variant="h6" gutterBottom>
-                E-COMMERCE
-              </Typography>
               <Box mt={4}>
                 <Avatar alt={user?.username} src={user?.avatar} sx={{ width: 80, height: 80, mx: 'auto' }} />
                 <Typography textAlign="center" mt={2}>

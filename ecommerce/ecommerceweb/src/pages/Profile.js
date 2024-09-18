@@ -186,9 +186,6 @@ const Profile = () => {
             p: 2,
           }}
         >
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, cursor: 'pointer' }} onClick={handleHome}>
-            E-COMMERCE
-          </Typography>
           <Box mt={4}>
             <Avatar alt={user?.username} src={user?.avatar} sx={{ width: 80, height: 80, mx: 'auto' }} />
             <Typography textAlign="center" mt={2}>
